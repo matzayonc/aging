@@ -69,6 +69,39 @@ whether they're filled at all, until the epoch ends and that band's
 orders are cleared together in a batch. There's no continuous trading
 within an epoch.
 
+## Worked example
+
+The same position, at three points in time: full range at entry, after
+selling the senior tranche outright, and mid-epoch with part of the
+remainder listed in the current auction (committed, not yet settled).
+
+```mermaid
+%%{init: {'gantt': {'barHeight': 26, 'barGap': 10, 'topPadding': 40, 'fontSize': 13, 'sectionFontSize': 13}, 'themeVariables': {'doneTaskBkgColor': '#6b7280', 'doneTaskBorderColor': '#4b5563', 'activeTaskBkgColor': '#2563eb', 'activeTaskBorderColor': '#1e3a8a', 'critBkgColor': '#dc2626', 'critBorderColor': '#991b1b', 'taskTextColor': '#ffffff', 'taskTextOutsideColor': '#ffffff', 'taskTextLightColor': '#ffffff', 'taskTextDarkColor': '#ffffff'}} }%%
+gantt
+    title Target exposure (%), 0-100
+    dateFormat X
+    axisFormat %s
+
+    section At entry
+    held           :done, 0, 100
+
+    section After selling the senior tranche
+    sold           :crit, 0, 50
+    held           :done, 50, 100
+
+    section Auctioning part of the remainder
+    sold           :crit, 0, 50
+    in auction     :active, 50, 75
+    held           :done, 75, 100
+```
+
+- **held** (gray) — still part of your position, earning its share of
+  yield.
+- **sold** (red) — transferred outright; the buyer now owns this band
+  going forward.
+- **in auction** (blue) — asks/bids posted this epoch, outcome unknown
+  until close.
+
 ## Open questions
 
 Deliberately unresolved for now — flagged so they don't get silently
