@@ -51,12 +51,12 @@ the hood into a basket of band trades:
 
 ```mermaid
 flowchart LR
-    L["Low leverage <br/> senior-weighted <br/> low risk/yield"]
-    H["High leverage <br/> junior-weighted <br/> high risk/yield"]
+    L["Low leverage <br/> senior-weighted <br/> low risk/yield"]:::senior
+    H["High leverage <br/> junior-weighted <br/> high risk/yield"]:::junior
     S((Slider))
     L --- S
     S --- H
-    S -->|leverage % to band basket| PM["Position market (band trades)"]
+    S -->|leverage % to band basket| PM["Position market (band trades)"]:::step
 ```
 
 The important design point: the **position market is the only thing the

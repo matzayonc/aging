@@ -81,10 +81,10 @@ The diagram below traces that arbitrage loop for a single band.
 
 ```mermaid
 flowchart LR
-    Primary["Primary market<br/>(deposit / withdraw)"]
-    Book["Band order book<br/>(buy / sell)"]
+    Primary["Primary market<br/>(deposit / withdraw)"]:::step
+    Book["Band order book<br/>(buy / sell)"]:::step
     Arb{{Arbitrageur}}
-    Peg(["Peg maintained"])
+    Peg(["Peg maintained"]):::good
 
     Book -- "price drifts from primary" --> Arb
     Arb -- "deposit or withdraw" --> Primary

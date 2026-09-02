@@ -169,8 +169,8 @@ The full sequence, from normal pricing through default to recovery:
 
 ```mermaid
 flowchart LR
-    A["Normal pricing<br/>(50 / 25 / 25)"] --> B["Default:<br/>equity absorbs 25¢ loss"]
-    B --> C["Pool unbalanced (50 / 25 / 0)<br/>senior + junior forgo future yield"]
-    C --> D["New 25¢ deposit<br/>fills equity"]
-    D --> E["Pool rebalanced (50 / 25 / 25)<br/>normal yield resumes"]
+    A["Normal pricing<br/>(50 / 25 / 25)"]:::step --> B["Default:<br/>equity absorbs 25¢ loss"]:::bad
+    B --> C["Pool unbalanced (50 / 25 / 0)<br/>senior + junior forgo future yield"]:::mezz
+    C --> D["New 25¢ deposit<br/>fills equity"]:::step
+    D --> E["Pool rebalanced (50 / 25 / 25)<br/>normal yield resumes"]:::good
 ```

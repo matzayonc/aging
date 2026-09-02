@@ -150,8 +150,10 @@ const config = {
             padding: 10,
           },
           themeVariables: {
-            // Gantt task states, reused across docs. Read them as a
-            // three-way status, whatever the diagram is about:
+            // Gantt task states, reused across docs. Same three colors as
+            // the flowchart node classes below (done=senior, active=step,
+            // crit=junior/bad) so a reader carries one palette across both
+            // diagram types, whatever the diagram is about:
             //   done (gray) -> intact / still held
             //   active (blue) -> partially hit / in flight
             //   crit (red) -> gone / transferred away
@@ -159,7 +161,7 @@ const config = {
             doneTaskBorderColor: '#4b5563',
             activeTaskBkgColor: '#2563eb',
             activeTaskBorderColor: '#1e3a8a',
-            critBkgColor: '#dc2626',
+            critBkgColor: '#d03b3b',
             critBorderColor: '#991b1b',
             taskTextColor: '#ffffff',
             taskTextOutsideColor: '#ffffff',
@@ -176,17 +178,28 @@ const config = {
           //   senior / mezz / junior -> position in the stack, safe to risky
           //   good / bad             -> which side of a trade-off wins
           //   step                   -> a neutral pipeline stage
+          //
+          // mezz and junior used to be adjacent amber/red (#d97706/#dc2626)
+          // that measured too close together to tell apart reliably (ΔE 14.4
+          // under normal vision, worse under deuteranopia — a fresh amber
+          // (#ca8a04, shifted toward yellow, away from red) fixes the
+          // separation; junior/bad/gantt-crit now share one red (#d03b3b)
+          // instead of two near-identical ones. #ca8a04 is too light for the
+          // white node text every other class uses, so .mezz gets its own
+          // dark-text override below.
           themeCSS: `
             .senior > rect, .senior > polygon, .senior > path { fill: #6b7280; stroke: #4b5563; }
-            .mezz   > rect, .mezz   > polygon, .mezz   > path { fill: #d97706; stroke: #b45309; }
-            .junior > rect, .junior > polygon, .junior > path { fill: #dc2626; stroke: #991b1b; }
+            .mezz   > rect, .mezz   > polygon, .mezz   > path { fill: #ca8a04; stroke: #854d0e; }
+            .junior > rect, .junior > polygon, .junior > path { fill: #d03b3b; stroke: #991b1b; }
             .good   > rect, .good   > polygon, .good   > path { fill: #059669; stroke: #047857; }
-            .bad    > rect, .bad    > polygon, .bad    > path { fill: #dc2626; stroke: #991b1b; }
+            .bad    > rect, .bad    > polygon, .bad    > path { fill: #d03b3b; stroke: #991b1b; }
             .step   > rect, .step   > polygon, .step   > path { fill: #2563eb; stroke: #1e3a8a; }
-            .senior .nodeLabel, .mezz .nodeLabel, .junior .nodeLabel,
+            .senior .nodeLabel, .junior .nodeLabel,
             .good .nodeLabel, .bad .nodeLabel, .step .nodeLabel { color: #ffffff; }
-            .senior text, .mezz text, .junior text,
+            .senior text, .junior text,
             .good text, .bad text, .step text { fill: #ffffff; }
+            .mezz .nodeLabel { color: #111827; }
+            .mezz text { fill: #111827; }
           `,
         },
       },
