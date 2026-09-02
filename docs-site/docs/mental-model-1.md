@@ -6,9 +6,9 @@ sidebar_position: 3
 
 How a position gets split into tranches and how those tranches change
 hands. Builds on [Context](./context.md) — the exposure axis, bands,
-attachment/detachment and senior/junior are as defined there. In the
-prototype the black-boxed asset side is literally a stub:
-`SimulatedDataProducer` in `src/data_producer.rs`.
+attachment/detachment and senior/junior are as defined there. Where the
+underlying yield actually comes from is treated as a black box here —
+out of scope for this page.
 
 ## Positions
 
@@ -29,15 +29,13 @@ a fat one at the bottom, then progressively thinner ones toward the top.
 
 The bounds aren't chosen per-trade — a seller exits along one of these
 preset boundaries (e.g. "sell my senior 50%"), never an arbitrary custom
-slice. This mirrors `BAND_FRACTIONS` in `src/tranche.rs` today
-(`[0.0, 0.5, 0.75, 0.9, 0.95, 1.0]`): a 50% senior tranche, then 25%,
-15%, 5%, 5% bands rising in risk.
+slice: a 50% senior tranche, then 25%, 15%, 5%, 5% bands rising in risk.
 
 The diagram below shows that split by size — a fat safe base tapering
 into thin, risky slices at the top.
 
 ```mermaid
-pie title Tranche bands by size (BAND_FRACTIONS)
+pie title Tranche bands by size
     "Senior (0-50%)" : 50
     "50-75%" : 25
     "75-90%" : 15
@@ -94,7 +92,7 @@ flowchart LR
 ```
 
 Order books this way are inherently **discrete** — one per fixed band,
-about five of them today (`BAND_FRACTIONS`). A future version could
+about five of them today. A future version could
 generalize this into a single **continuous market**, two-dimensional
 over risk and yield, tracing out a full risk/reward curve instead of
 five discrete points on it. That's a later step; for now, discrete
@@ -147,27 +145,3 @@ assumed:
 - Can a position be sold down across multiple separate fills (partial
   sales layered over time), or is a band's exit an all-or-nothing event
   per position?
-
-## Relationship to the prototype
-
-[Context](./context.md)'s vocabulary table already covers exposure,
-tranche/band, attachment, detachment, senior, junior, rate, quote, and
-position. Two more terms map directly to code in `src/tranche.rs`:
-
-| Doc term | Code term |
-|---|---|
-| Fixed band boundaries | `BAND_FRACTIONS` |
-| Primary snapshot rate | `TrancheOrder::rate` |
-
-`TrancheOrder::rate` is a *yield rate* (the mean `expected_yield` of a
-band's cheapest claimed quotes) — it's the prototype's stand-in for what
-the primary market implies a band should yield. That's a different
-number from a **secondary order-book price** as described above, which
-is principal-denominated (priced in the underlying asset, not as a
-yield rate) and doesn't exist in the prototype yet.
-
-The prototype today computes tranches as a static, aggregate snapshot
-from many independent `Quote`s — there's no `Position` type, no
-ownership, no partial transfer, and no order book or time dimension
-yet. This document is the mental model those pieces would need to be
-built against.

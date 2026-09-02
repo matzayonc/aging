@@ -4,9 +4,8 @@ sidebar_position: 1
 
 # Context
 
-What this project is, the vocabulary it borrows, and where the code
-currently stands. Read this first; [Mental Model #1](./mental-model-1.md)
-builds on it.
+What this project is and the vocabulary it borrows. Read this first;
+[Mental Model #1](./mental-model-1.md) builds on it.
 
 ## The problem
 
@@ -30,8 +29,8 @@ flowchart LR
 ```
 
 
-This repo is a prototype for doing that on-chain: how a position is
-split, how the layers get priced, and how they change hands.
+This is a design for doing that on-chain: how a position is split, how
+the layers get priced, and how they change hands.
 
 The mechanism is **asset-agnostic**. It cares about the shape of the
 yield the pool produces, not what generates it — where that yield comes

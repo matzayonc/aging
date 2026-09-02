@@ -11,8 +11,7 @@ detachment, senior, junior — comes from there intact.
 This page summarises how traditional finance actually implements
 tranching: the legal and cash-flow machinery, the models used to price
 the layers, and the institutional apparatus that produces a price at
-all. The last section maps it back onto [this
-prototype](./context.md) — including the parts we don't have.
+all.
 
 Background, not a prerequisite: nothing here is required to understand
 [Mental Model #1](./mental-model-1.md) or the rest of the docs, which
@@ -373,29 +372,19 @@ structures with standardised eligibility, static pools, transparent
 waterfalls and full historical loan data with lower risk weights and
 capital floors.
 
-## What this maps to here
+## Where this design draws the line differently
 
-| TradFi | This project |
-|---|---|
-| Attachment / detachment points | `TrancheOrder { attachment, detachment }` — same interval arithmetic |
-| Loss allocation ramp $L_T$ | Not implemented; no loss event is ever run |
-| Senior / mezzanine / equity | Bands over the exposure axis, junior at 100 |
-| Rating agency CE thresholds | `BAND_FRACTIONS` — fixed boundaries, chosen up front |
-| Excess spread to equity | The steep top of the cubic yield curve |
-| Dealer consensus / evaluated pricing | `compute_tranches` pricing a band off its cheapest quotes |
-| TRACE prints, Totem polling, vendors | Replaced by an on-chain double auction ([Mental Model #1](./mental-model-1.md)) |
-| SPV, bankruptcy remoteness | The pool contract |
-| Risk retention, Basel capital | Absent |
+Three gaps are worth being explicit about, since they're central to how
+TradFi actually prices a tranche:
 
-Three honest gaps stand out:
-
-- **No loss model.** The exposure axis describes a waterfall that never
-  runs. There is no $L$, no recovery rate, no write-down — so band
-  ordering is currently a convention rather than a consequence.
-- **No correlation.** The prototype prices each band off its own quotes
+- **No loss model.** [Mental Model #1](./mental-model-1.md)'s exposure
+  axis describes a waterfall that never runs. There's no cumulative loss
+  variable, no recovery rate, no write-down — so band ordering is a
+  convention rather than a consequence of a modeled loss event.
+- **No correlation.** Each band is priced off its own quotes
   independently. TradFi's central insight is that value moves between
-  senior and junior purely as a function of $\rho$; with no dependence
-  structure, our pricing cannot express that at all.
+  senior and junior purely as a function of default correlation $\rho$;
+  with no dependence structure, this design can't express that at all.
 - **No dynamic waterfall.** OC/IC triggers make the real waterfall
   state-dependent, redirecting cash to de-lever the senior tranche under
   stress. Nothing here reacts to collateral performance.
@@ -403,8 +392,7 @@ Three honest gaps stand out:
 And one genuine structural difference, worth being explicit about: in
 structured credit the boundaries are set by rating agencies to satisfy
 mandate constraints, and secondary prices are assembled after the fact
-from polls and models. The design in [Mental Model
-#1](./mental-model-1.md) fixes the boundaries the same way — up front,
-by convention — but replaces the entire discovery apparatus with a
-per-epoch double auction that clears on-chain. The bands are borrowed;
-the price discovery is not.
+from polls and models. [Mental Model #1](./mental-model-1.md) fixes the
+boundaries the same way — up front, by convention — but replaces the
+entire discovery apparatus with a continuous, arbitrage-pegged secondary
+order book. The bands are borrowed; the price discovery is not.
