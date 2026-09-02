@@ -35,14 +35,18 @@ The SPV funds the purchase by issuing a stack of liabilities. Collected
 interest and principal flow down that stack in a contractually fixed
 priority order — the **cash flow waterfall**:
 
-```
-cash in ──▶ fees ──▶ senior interest+principal ──▶ mezzanine ──▶ residual to equity
-```
+Losses run the other way, bottom-up. Solid arrows below are cash going
+down the stack; dotted arrows are losses climbing back up it.
 
-Losses run the other way, bottom-up:
-
-```
-defaults ──▶ equity wiped ──▶ mezzanine written down ──▶ senior impaired
+```mermaid
+flowchart TB
+    C(["Collected interest + principal"]) --> F["Fees and expenses"]:::step
+    F --> A["Class A - senior<br/>interest, then principal"]:::senior
+    A -->|"what's left"| B["Class B/C - mezzanine"]:::mezz
+    B -->|"what's left"| E["Equity - residual only"]:::junior
+    D(["Defaults"]) -.->|"wiped first"| E
+    E -.->|"then written down"| B
+    B -.->|"impaired last"| A
 ```
 
 | Layer | Rating | Position | Compensation |
@@ -74,11 +78,53 @@ of par and is gone at 3%; the junior mezzanine at $[3\%, 7\%]$ starts
 taking losses only then. A senior tranche attaching at 15% is untouched
 until 15% of the pool has been liquidated at zero recovery.
 
+The same stack at three levels of cumulative loss — gray is whole, blue
+is partially written down, red is gone:
+
+```mermaid
+gantt
+    title Cumulative pool loss (% of par), stack drawn 0-30
+    dateFormat X
+    axisFormat %s
+
+    section L = 2%
+    equity, 2/3 gone     :active, 0, 3
+    junior mezz, whole   :done, 3, 7
+    senior, whole        :done, 7, 30
+
+    section L = 5%
+    equity, wiped        :crit, 0, 3
+    junior mezz, hit     :active, 3, 7
+    senior, whole        :done, 7, 30
+
+    section L = 20%
+    equity, wiped        :crit, 0, 3
+    junior mezz, wiped   :crit, 3, 7
+    senior, impaired     :active, 7, 30
+```
+
 **This is the same construct as our exposure axis, with the direction
 flipped.** In this repo, exposure 100 is first-loss and exposure 0 is
 safest; in structured credit, losses climb from attachment 0 upward.
 Same band, same `[attachment, detachment)` interval arithmetic, opposite
 orientation.
+
+```mermaid
+gantt
+    title The same stack, drawn on both conventions
+    dateFormat X
+    axisFormat %s
+
+    section Structured credit, by attachment %
+    first loss   :crit, 0, 10
+    mezzanine    :active, 10, 30
+    senior       :done, 30, 100
+
+    section This repo, by exposure
+    senior       :done, 0, 70
+    mezzanine    :active, 70, 90
+    first loss   :crit, 90, 100
+```
 
 ### Credit enhancement
 
@@ -176,6 +222,14 @@ obvious:
   Senior holders lose: catastrophic scenarios now punch clean through
   the subordinate layers.
 
+```mermaid
+flowchart LR
+    LO(["Low correlation<br/>defaults arrive independently"]) --> LOS["Senior<br/>tail losses implausible,<br/>trades tight"]:::good
+    LO --> LOE["Equity<br/>isolated defaults chew<br/>through thin subordination"]:::bad
+    HI(["High correlation<br/>defaults cluster on shocks"]) --> HIS["Senior<br/>catastrophe punches<br/>through the layers below"]:::bad
+    HI --> HIE["Equity<br/>gains from the raised odds<br/>of zero defaults"]:::good
+```
+
 So correlation is not a risk dial that moves all tranches together — it
 is a *transfer* of value between the top and the bottom of the stack.
 Equity is long correlation; senior is short it.
@@ -271,6 +325,17 @@ evaluated prices, which feed the ASC 820 / IFRS 13 fair value hierarchy:
   evaluations.
 - **Level 3** — unobservable: your own DCF or copula model, used when
   the market gives you nothing.
+
+```mermaid
+flowchart TB
+    R["1 - Rating agencies<br/>size the credit enhancement"]:::step --> I(["Issuance:<br/>attachment/detachment now fixed"])
+    I --> T["2 - TRACE<br/>firm prints of real executions"]:::step
+    I --> P["3 - Totem<br/>polled dealer mids for<br/>everything that doesn't trade"]:::step
+    T --> V["4 - Evaluated pricing vendors<br/>BVAL, ICE, Markit"]:::step
+    P --> V
+    V --> L2["Level 2<br/>observable inputs"]:::senior
+    V --> L3["Level 3<br/>your own model, unobservable"]:::junior
+```
 
 The through-line: a structured credit price is a **negotiated
 institutional artifact**, assembled from rating constraints, sparse
