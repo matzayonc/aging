@@ -1,41 +1,14 @@
-# Website
+# docs-site
 
-This website is built using [Docusaurus 2](https://docusaurus.io/), a modern static website generator.
+Documentation for [aging](https://github.com/matzayonc/aging), built with
+[Docusaurus](https://docusaurus.io/). Published to GitHub Pages at
+https://matzayonc.github.io/aging/.
 
-### Installation
-
-```
-$ yarn
-```
-
-### Local Development
-
-```
-$ yarn start
+```bash
+npm install
+npm start   # dev server with hot reload
+npm run build   # static build into build/
 ```
 
-This command starts a local development server and opens up a browser window. Most changes are reflected live without having to restart the server.
-
-### Build
-
-```
-$ yarn build
-```
-
-This command generates static content into the `build` directory and can be served using any static contents hosting service.
-
-### Deployment
-
-Using SSH:
-
-```
-$ USE_SSH=true yarn deploy
-```
-
-Not using SSH:
-
-```
-$ GIT_USER=<Your GitHub username> yarn deploy
-```
-
-If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
+Pages live in `docs/`, ordered by the `sidebar_position` in each file's
+front matter. Mermaid diagrams and KaTeX math are both enabled.

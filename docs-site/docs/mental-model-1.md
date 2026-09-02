@@ -1,40 +1,35 @@
 ---
-sidebar_position: 1
+sidebar_position: 3
 ---
 
 # Mental Model #1
 
-How on-chain tranching works: what a position is, how it's split into
-tranches, and how tranches change hands. This describes the trading
-mechanism only — where the underlying yield actually comes from (the
-mortgage-like asset side) is out of scope here and treated as a black
-box, the same way `SimulatedDataProducer` stands in for it in the
-current prototype.
+How a position gets split into tranches and how those tranches change
+hands. Builds on [Context](./context.md) — the exposure axis, bands,
+attachment/detachment and senior/junior are as defined there. In the
+prototype the black-boxed asset side is literally a stub:
+`SimulatedDataProducer` in `src/data_producer.rs`.
 
 ## Positions
 
-A user enters by depositing into the pool — the **primary market**.
-Their position spans the **entire risk spectrum**, 0–100% exposure,
-sized by their deposit — not a slice of it, and there's no pricing
-question here: the deposit *is* the position, 1:1 in the underlying
-asset. While unsplit, a position earns the pool's blended yield across
-that whole range.
-
-A position is, conceptually: `(owner, size, exposure range currently
-held)`. On entry, that range is always `[0, 100]`. Selling narrows it —
-selling is the **secondary market**, covered below.
+A user enters by depositing into the pool — the **primary market**. A
+position is, concretely: `(owner, size, exposure range currently
+held)`. On entry that range is always the whole axis, `[0, 100]`, sized
+by the deposit — not a slice of it, and there's no pricing question
+here: the deposit *is* the position, 1:1 in the underlying asset. While
+unsplit, a position earns the pool's blended yield across that whole
+range. Selling only ever narrows the range — selling is the
+**secondary market**, covered below; it never moves the position
+sideways.
 
 ## Tranche bands
 
-The 0–100% exposure axis is cut into a **fixed, predefined** set of
-bands — mortgage-style: a fat, safe tranche at the bottom, then
-progressively thinner, riskier bands toward the top. Bottom bands are
-senior: first in line to stay whole, last in line for yield. Top bands
-are junior: first to absorb losses, first (and biggest) claim on yield.
+The axis is cut into a **fixed, predefined** set of bands, mortgage-style:
+a fat one at the bottom, then progressively thinner ones toward the top.
 
-These bounds aren't chosen per-trade — a seller can exit along one of
-these fixed boundaries (e.g. "sell my senior 50%"), not an arbitrary
-custom slice. This mirrors `BAND_FRACTIONS` in `src/tranche.rs` today
+The bounds aren't chosen per-trade — a seller exits along one of these
+preset boundaries (e.g. "sell my senior 50%"), never an arbitrary custom
+slice. This mirrors `BAND_FRACTIONS` in `src/tranche.rs` today
 (`[0.0, 0.5, 0.75, 0.9, 0.95, 1.0]`): a 50% senior tranche, then 25%,
 15%, 5%, 5% bands rising in risk.
 
@@ -113,7 +108,6 @@ resting as an open order on that band's order book (committed, not yet
 filled).
 
 ```mermaid
-%%{init: {'gantt': {'barHeight': 26, 'barGap': 10, 'topPadding': 40, 'fontSize': 13, 'sectionFontSize': 13}, 'themeVariables': {'doneTaskBkgColor': '#6b7280', 'doneTaskBorderColor': '#4b5563', 'activeTaskBkgColor': '#2563eb', 'activeTaskBorderColor': '#1e3a8a', 'critBkgColor': '#dc2626', 'critBorderColor': '#991b1b', 'taskTextColor': '#ffffff', 'taskTextOutsideColor': '#ffffff', 'taskTextLightColor': '#ffffff', 'taskTextDarkColor': '#ffffff'}} }%%
 gantt
     title Target exposure (%), 0-100
     dateFormat X
@@ -156,10 +150,12 @@ assumed:
 
 ## Relationship to the prototype
 
-| Doc term | Code term (`src/tranche.rs`) |
+[Context](./context.md)'s vocabulary table already covers exposure,
+tranche/band, attachment, detachment, senior, junior, rate, quote, and
+position. Two more terms map directly to code in `src/tranche.rs`:
+
+| Doc term | Code term |
 |---|---|
-| Exposure axis, 0–100% | `EXPOSURE_MIN`, `EXPOSURE_MAX` |
-| Tranche band | `TrancheOrder`, bounded by `attachment`/`detachment` |
 | Fixed band boundaries | `BAND_FRACTIONS` |
 | Primary snapshot rate | `TrancheOrder::rate` |
 

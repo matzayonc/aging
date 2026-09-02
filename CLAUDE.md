@@ -23,21 +23,34 @@ maps to real code; check `src/` before claiming something is implemented.
 
 ## Docs pages (read in this order)
 
-1. **`docs-site/docs/mental-model-1.md`** — core mechanism: positions, fixed
+1. **`docs-site/docs/context.md`** — start here: the problem tranching
+   solves, the exposure axis, attachment/detachment, senior/junior, and the
+   canonical vocabulary table (exposure, tranche/band, attachment,
+   detachment, senior, junior, rate, quote, position). Later pages build on
+   this rather than redefining these terms.
+2. **`docs-site/docs/traditional-finance.md`** — how structured credit
+   implements the same idea today: SPV/waterfall structure, attachment/
+   detachment pricing, the one-factor Gaussian copula, OAS, price discovery
+   (rating agencies, TRACE, Totem, evaluated pricing vendors), Basel capital
+   treatment — and a closing table mapping each piece onto this prototype,
+   including the honest gaps (no loss model, no correlation, no dynamic
+   waterfall).
+3. **`docs-site/docs/mental-model-1.md`** — core trading mechanism: fixed
    tranche bands (mirrors `BAND_FRACTIONS` in `src/tranche.rs`, 50/25/15/5/5),
    primary market (deposit) vs. secondary market (a per-band order book,
    atomically arbitraged against primary so secondary stays pegged to it).
-2. **`docs-site/docs/invariants.md`** — system-level properties: position
+   Trading is **continuous** — orders cross immediately, no epochs/batching.
+4. **`docs-site/docs/invariants.md`** — system-level properties: position
    value never negative; position value conserved 1:1 against the underlying
    asset (deposit/withdraw pact); tranche liquidity balanced (normal mode:
    only balanced deposits accepted; wipeout mode: a default clears one or
    more tranches, survivors keep already-earned yield but forgo *future*
    yield until a new, separate deposit rebuilds the missing tranche).
-3. **`docs-site/docs/user-experience.md`** — how different users interact:
+5. **`docs-site/docs/user-experience.md`** — how different users interact:
    primary depositors get a plain full-range deposit; institutions/market
    makers use the order book directly; retail gets a leverage slider that's
    a UX layer over the same order book, not a separate primitive.
-4. **`docs-site/docs/tranche-pricing-example.md`** — a fully worked numeric
+6. **`docs-site/docs/tranche-pricing-example.md`** — a fully worked numeric
    example (a simplified 3-way senior/junior/equity split, not the real
    5-band structure) covering normal pricing, an equity wipeout, and how
    that wipeout reprices junior/senior on the secondary market short- vs.
@@ -45,10 +58,13 @@ maps to real code; check `src/` before claiming something is implemented.
 
 ## Terminology (doc term → code term)
 
+`context.md` is the canonical vocabulary page (exposure, tranche/band,
+attachment, detachment, senior, junior, rate, quote, position) — other pages
+link to it rather than redefining those terms. Two more terms map directly
+to code, introduced in `mental-model-1.md`:
+
 | Doc term | Code term |
 |---|---|
-| Exposure axis, 0–100% | `EXPOSURE_MIN`/`EXPOSURE_MAX` (`src/data_producer.rs`) |
-| Tranche band | `TrancheOrder`, bounded by `attachment`/`detachment` (`src/tranche.rs`) |
 | Fixed band boundaries | `BAND_FRACTIONS` (`src/tranche.rs`) |
 | Primary snapshot rate | `TrancheOrder::rate` — a yield rate, distinct from a secondary order's principal-denominated price |
 | Position, primary/secondary market, order book | doc-only — no code yet |
