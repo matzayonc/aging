@@ -28,13 +28,14 @@ maps to real code; check `src/` before claiming something is implemented.
    canonical vocabulary table (exposure, tranche/band, attachment,
    detachment, senior, junior, rate, quote, position). Later pages build on
    this rather than redefining these terms.
-2. **`docs-site/docs/traditional-finance.md`** — how structured credit
-   implements the same idea today: SPV/waterfall structure, attachment/
-   detachment pricing, the one-factor Gaussian copula, OAS, price discovery
-   (rating agencies, TRACE, Totem, evaluated pricing vendors), Basel capital
-   treatment — and a closing table mapping each piece onto this prototype,
-   including the honest gaps (no loss model, no correlation, no dynamic
-   waterfall).
+2. **`docs-site/docs/traditional-finance.md`** — *optional background, not a
+   prerequisite* — how structured credit implements the same idea today:
+   SPV/waterfall structure, attachment/detachment pricing, the one-factor
+   Gaussian copula, OAS, price discovery (rating agencies, TRACE, Totem,
+   evaluated pricing vendors), Basel capital treatment — and a closing table
+   mapping each piece onto this prototype, including the honest gaps (no
+   loss model, no correlation, no dynamic waterfall). The rest of the docs
+   are self-contained without it.
 3. **`docs-site/docs/mental-model-1.md`** — core trading mechanism: fixed
    tranche bands (mirrors `BAND_FRACTIONS` in `src/tranche.rs`, 50/25/15/5/5),
    primary market (deposit) vs. secondary market (a per-band order book,

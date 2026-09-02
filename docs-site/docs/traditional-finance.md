@@ -14,6 +14,11 @@ the layers, and the institutional apparatus that produces a price at
 all. The last section maps it back onto [this
 prototype](./context.md) — including the parts we don't have.
 
+Background, not a prerequisite: nothing here is required to understand
+[Mental Model #1](./mental-model-1.md) or the rest of the docs, which
+are self-contained. Skip this page on a first read and come back to it
+later if you want the TradFi grounding.
+
 ## Structure
 
 ### The SPV
