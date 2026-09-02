@@ -21,3 +21,28 @@
   align-items: center;
   justify-content: center;
 }
+
+.pages {
+  padding: 3rem 0;
+}
+
+.pageCard {
+  display: block;
+  height: 100%;
+  padding: 1.5rem;
+  border: 1px solid var(--ifm-color-emphasis-300);
+  border-radius: var(--ifm-global-radius);
+  color: inherit;
+  transition: border-color var(--ifm-transition-fast);
+}
+
+.pageCard:hover {
+  border-color: var(--ifm-color-primary);
+  text-decoration: none;
+  color: inherit;
+}
+
+.pageCard p {
+  margin-bottom: 0;
+  color: var(--ifm-color-emphasis-700);
+}

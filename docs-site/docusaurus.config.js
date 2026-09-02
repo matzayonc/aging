@@ -1,6 +1,9 @@
 // @ts-check
 // Note: type annotations allow type checking and IDEs autocompletion
 
+const math = require('remark-math');
+const katex = require('rehype-katex');
+
 const lightCodeTheme = require('prism-react-renderer/themes/github');
 const darkCodeTheme = require('prism-react-renderer/themes/dracula');
 
@@ -27,6 +30,17 @@ const config = {
   markdown: {
     mermaid: true,
   },
+
+  // KaTeX styles for the math in the structured-finance docs.
+  stylesheets: [
+    {
+      href: 'https://cdn.jsdelivr.net/npm/katex@0.13.24/dist/katex.min.css',
+      type: 'text/css',
+      integrity:
+        'sha384-odtC+0UGzzFL/6PNoE8rX/SPcQDXBJ+uRepguP4QkPCm2LBxH3FA3y+fKSiJ+AmM',
+      crossorigin: 'anonymous',
+    },
+  ],
   themes: ['@docusaurus/theme-mermaid'],
 
   // Even if you don't use internalization, you can use this field to set useful
@@ -44,18 +58,11 @@ const config = {
       ({
         docs: {
           sidebarPath: require.resolve('./sidebars.js'),
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/matzayonc/aging/tree/master/docs-site/',
+          remarkPlugins: [math],
+          rehypePlugins: [katex],
+          editUrl: 'https://github.com/matzayonc/aging/tree/master/docs-site/',
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/matzayonc/aging/tree/master/docs-site/',
-        },
+        blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -66,22 +73,15 @@ const config = {
   themeConfig:
     /** @type {import('@docusaurus/preset-classic').ThemeConfig} */
     ({
-      // Replace with your project's social card
-      image: 'img/docusaurus-social-card.jpg',
       navbar: {
         title: 'Aging',
-        logo: {
-          alt: 'Aging Logo',
-          src: 'img/logo.svg',
-        },
         items: [
           {
             type: 'docSidebar',
-            sidebarId: 'tutorialSidebar',
+            sidebarId: 'docsSidebar',
             position: 'left',
             label: 'Docs',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/matzayonc/aging',
             label: 'GitHub',
@@ -95,19 +95,17 @@ const config = {
           {
             title: 'Docs',
             items: [
+              {label: 'Context', to: '/docs/context'},
               {
-                label: 'Mental Model #1',
-                to: '/docs/mental-model-1',
+                label: 'The TradFi Implementation',
+                to: '/docs/traditional-finance',
               },
+              {label: 'Mental Model #1', to: '/docs/mental-model-1'},
             ],
           },
           {
             title: 'More',
             items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
               {
                 label: 'GitHub',
                 href: 'https://github.com/matzayonc/aging',
