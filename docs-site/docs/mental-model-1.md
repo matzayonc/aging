@@ -124,24 +124,32 @@ selling the senior tranche outright, and with part of the remainder
 resting as an open order on that band's order book (committed, not yet
 filled).
 
-```mermaid
-gantt
-    title Target exposure (%), 0-100
-    dateFormat X
-    axisFormat %s
+<div style={{margin: '1.5rem 0'}}>
+  <div className="tranche-ticks">
+    <span className="tranche-tick" style={{left: '0%'}}>0</span>
+    <span className="tranche-tick" style={{left: '50%'}}>50</span>
+    <span className="tranche-tick" style={{left: '75%'}}>75</span>
+    <span className="tranche-tick" style={{left: '100%'}}>100</span>
+  </div>
 
-    section At entry
-    held           :done, 0, 100
+  <div style={{fontSize: '0.85em', fontWeight: 700, margin: '0.5rem 0 0.3rem'}}>At entry</div>
+  <div className="tranche-bar">
+    <div className="tranche-band" style={{flexGrow: 100, background: '#6b7280'}} title="held — 0-100">held</div>
+  </div>
 
-    section After selling the senior tranche
-    sold           :crit, 0, 50
-    held           :done, 50, 100
+  <div style={{fontSize: '0.85em', fontWeight: 700, margin: '0.9rem 0 0.3rem'}}>After selling the senior tranche</div>
+  <div className="tranche-bar">
+    <div className="tranche-band" style={{flexGrow: 50, background: '#d55e00'}} title="sold — 0-50">sold</div>
+    <div className="tranche-band" style={{flexGrow: 50, background: '#6b7280'}} title="held — 50-100">held</div>
+  </div>
 
-    section Listing part of the remainder
-    sold           :crit, 0, 50
-    listed         :active, 50, 75
-    held           :done, 75, 100
-```
+  <div style={{fontSize: '0.85em', fontWeight: 700, margin: '0.9rem 0 0.3rem'}}>Listing part of the remainder</div>
+  <div className="tranche-bar">
+    <div className="tranche-band" style={{flexGrow: 50, background: '#d55e00'}} title="sold — 0-50">sold</div>
+    <div className="tranche-band" style={{flexGrow: 25, background: '#785ef0'}} title="listed — 50-75">listed</div>
+    <div className="tranche-band" style={{flexGrow: 25, background: '#6b7280'}} title="held — 75-100">held</div>
+  </div>
+</div>
 
 - **held** (gray) — still part of your position, earning its share of
   yield.

@@ -23,12 +23,19 @@ Split it into three tranches:
 
 The $1.00 principal splits evenly into the three bands:
 
-```mermaid
-pie title Principal split ($1.00)
-    "Senior" : 50
-    "Junior" : 25
-    "Equity" : 25
-```
+<div style={{margin: '1.5rem 0'}}>
+  <div className="tranche-bar">
+    <div className="tranche-band" style={{flexGrow: 50, background: '#6b7280'}} title="Senior — 50¢">Senior</div>
+    <div className="tranche-band" style={{flexGrow: 25, background: '#e69f00'}} title="Junior — 25¢">Junior</div>
+    <div className="tranche-band" style={{flexGrow: 25, background: '#d55e00'}} title="Equity — 25¢">Equity</div>
+  </div>
+  <div className="tranche-ticks">
+    <span className="tranche-tick" style={{left: '0%'}}>0¢</span>
+    <span className="tranche-tick" style={{left: '50%'}}>50¢</span>
+    <span className="tranche-tick" style={{left: '75%'}}>75¢</span>
+    <span className="tranche-tick" style={{left: '100%'}}>100¢</span>
+  </div>
+</div>
 
 ## Floors
 
@@ -67,6 +74,38 @@ cheaper than depositing directly, a riskless arbitrage.
 | Equity | 32¢ | 27¢ | 15.6% |
 | **Total** | **110¢** | **100¢** | — |
 
+Each bar below is scaled to that tranche's own expected value — full bar
+length = expected @ period end, the filled portion = price today, the dark
+tick = the floor. The gap between the fill and the bar's end is the
+discount; watch it grow from senior to equity:
+
+<div style={{margin: '1.5rem 0', display: 'flex', flexDirection: 'column', gap: '0.9rem'}}>
+  <div>
+    <div style={{fontSize: '0.85em', fontWeight: 700, marginBottom: '0.25rem'}}>Senior</div>
+    <div className="pricing-track" style={{width: '85%'}}>
+      <div className="pricing-fill" style={{width: '96.1%', background: '#6b7280'}} title="Price today — 49¢" />
+      <div className="pricing-floor-tick" style={{left: '98.0%'}} title="Floor — 50¢" />
+    </div>
+    <div style={{fontSize: '0.8em', color: 'var(--ifm-color-content-secondary)', marginTop: '0.2rem'}}>Floor 50¢ · price today 49¢ · expected 51¢ · discount 3.9%</div>
+  </div>
+  <div>
+    <div style={{fontSize: '0.85em', fontWeight: 700, marginBottom: '0.25rem'}}>Junior</div>
+    <div className="pricing-track" style={{width: '45%'}}>
+      <div className="pricing-fill" style={{width: '88.9%', background: '#e69f00'}} title="Price today — 24¢" />
+      <div className="pricing-floor-tick" style={{left: '92.6%'}} title="Floor — 25¢" />
+    </div>
+    <div style={{fontSize: '0.8em', color: 'var(--ifm-color-content-secondary)', marginTop: '0.2rem'}}>Floor 25¢ · price today 24¢ · expected 27¢ · discount 11.1%</div>
+  </div>
+  <div>
+    <div style={{fontSize: '0.85em', fontWeight: 700, marginBottom: '0.25rem'}}>Equity</div>
+    <div className="pricing-track" style={{width: '53.3%'}}>
+      <div className="pricing-fill" style={{width: '84.4%', background: '#d55e00'}} title="Price today — 27¢" />
+      <div className="pricing-floor-tick" style={{left: '78.1%'}} title="Floor — 25¢" />
+    </div>
+    <div style={{fontSize: '0.8em', color: 'var(--ifm-color-content-secondary)', marginTop: '0.2rem'}}>Floor 25¢ · price today 27¢ · expected 32¢ · discount 15.6%</div>
+  </div>
+</div>
+
 The discount rate rises with risk — senior lowest, equity highest — and
 splits into two components. A shared, near-risk-free **time-value** piece
 accounts for capital being locked until period close: the same reason a
@@ -93,13 +132,25 @@ hit; senior and junior, protected by their seniority, are untouched:
 | Equity | 25¢ | **0¢** |
 | **Total** | **100¢** | **75¢** |
 
-Equity is wiped to zero, so it drops out of the post-default pool entirely:
+Equity is wiped to zero, so it drops out of the post-default pool entirely.
+Both bars below are on the same $-per-pixel scale, so senior and junior's
+segments stay the same width — only the equity segment, and the pool's
+total width, change:
 
-```mermaid
-pie title Pool after default (75¢ total)
-    "Senior" : 50
-    "Junior" : 25
-```
+<div style={{margin: '1.5rem 0'}}>
+  <div style={{fontSize: '0.85em', fontWeight: 700, marginBottom: '0.3rem'}}>Before default — $1.00 pool</div>
+  <div className="tranche-bar">
+    <div className="tranche-band" style={{flexGrow: 50, background: '#6b7280'}} title="Senior — 50¢">Senior</div>
+    <div className="tranche-band" style={{flexGrow: 25, background: '#e69f00'}} title="Junior — 25¢">Junior</div>
+    <div className="tranche-band" style={{flexGrow: 25, background: '#d55e00'}} title="Equity — 25¢, about to be wiped">Equity</div>
+  </div>
+
+  <div style={{fontSize: '0.85em', fontWeight: 700, margin: '0.9rem 0 0.3rem'}}>After default — 75¢ pool</div>
+  <div className="tranche-bar" style={{width: '75%'}}>
+    <div className="tranche-band" style={{flexGrow: 50, background: '#6b7280'}} title="Senior — 50¢, untouched">Senior</div>
+    <div className="tranche-band" style={{flexGrow: 25, background: '#e69f00'}} title="Junior — 25¢, untouched">Junior</div>
+  </div>
+</div>
 
 Equity lands at exactly $0.00 — never negative, the extreme case of
 [Invariants](./invariants.md)' non-negative-value rule, and exactly the
@@ -137,6 +188,39 @@ Before the default, senior's buffer was junior plus equity (25¢ + 25¢ =
 buffer is just junior (25¢) — halved. Junior's buffer is **0¢** — gone
 entirely. It's now first in line for any further loss, exactly where equity
 used to stand.
+
+The green portion of each bar below is the protecting capital — the buffer
+that has to be wiped out before this tranche takes a loss. Gray is the
+tranche itself plus anything more senior than it; on the after side, both
+bars are 75% as wide as before, the same pool-shrinkage scale used above:
+
+<div style={{margin: '1.5rem 0', display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.4rem 1.5rem'}}>
+  <div style={{fontSize: '0.85em', fontWeight: 700}}>Senior's buffer — before</div>
+  <div style={{fontSize: '0.85em', fontWeight: 700}}>Senior's buffer — after</div>
+
+  <div className="tranche-bar">
+    <div className="tranche-band" style={{flexGrow: 50, background: 'var(--ifm-color-emphasis-200)'}} title="Senior itself — 50¢" />
+    <div className="tranche-band" style={{flexGrow: 50, background: '#009e73'}} title="Buffer — 50¢ (junior + equity)">50¢</div>
+  </div>
+  <div className="tranche-bar" style={{width: '75%'}}>
+    <div className="tranche-band" style={{flexGrow: 50, background: 'var(--ifm-color-emphasis-200)'}} title="Senior itself — 50¢" />
+    <div className="tranche-band" style={{flexGrow: 25, background: '#009e73'}} title="Buffer — 25¢ (junior only)">25¢</div>
+  </div>
+
+  <div style={{fontSize: '0.85em', fontWeight: 700, marginTop: '0.6rem'}}>Junior's buffer — before</div>
+  <div style={{fontSize: '0.85em', fontWeight: 700, marginTop: '0.6rem'}}>Junior's buffer — after</div>
+
+  <div className="tranche-bar">
+    <div className="tranche-band" style={{flexGrow: 75, background: 'var(--ifm-color-emphasis-200)'}} title="Senior + junior — 75¢" />
+    <div className="tranche-band" style={{flexGrow: 25, background: '#009e73'}} title="Buffer — 25¢ (equity)">25¢</div>
+  </div>
+  <div>
+    <div className="tranche-bar" style={{width: '75%'}}>
+      <div className="tranche-band" style={{flexGrow: 75, background: 'var(--ifm-color-emphasis-200)'}} title="Senior + junior — the whole remaining pool" />
+    </div>
+    <div style={{fontSize: '0.8em', color: 'var(--ifm-color-content-secondary)', marginTop: '0.2rem'}}>0¢ — gone entirely</div>
+  </div>
+</div>
 
 ### Short term
 

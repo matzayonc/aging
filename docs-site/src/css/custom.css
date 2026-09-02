@@ -115,3 +115,37 @@
 .tranche-tick:last-child {
   transform: translateX(-100%);
 }
+
+/*
+ * Shared style for a per-item "actual vs. target, with a reference mark"
+ * bar (a bullet-chart pattern) — currently the secondary-market discount
+ * in tranche-pricing-example.md: track width = expected value (scaled to a
+ * shared reference across rows so tranches stay comparable), fill width =
+ * price today as a fraction of expected, tick = the floor. A page supplies
+ * one `.pricing-track` per row with its own width/fill color, and one
+ * `.pricing-fill` + `.pricing-floor-tick` child, both percentage-widthed —
+ * again no coordinate math, just the same percentages already in the
+ * doc's own tables.
+ */
+.pricing-track {
+  position: relative;
+  height: 26px;
+  border-radius: 6px;
+  background: var(--ifm-color-emphasis-100);
+  border: 1px solid var(--ifm-color-emphasis-300);
+  overflow: hidden;
+}
+.pricing-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  border-radius: 5px 0 0 5px;
+}
+.pricing-floor-tick {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--ifm-color-emphasis-800);
+}
