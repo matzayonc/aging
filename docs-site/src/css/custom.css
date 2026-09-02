@@ -69,3 +69,49 @@
   border-radius: 7px;
   background: linear-gradient(to right, #6b7280, #d55e00);
 }
+
+/*
+ * Shared style for a segmented bar showing fixed bounds along a 0-100 axis
+ * (currently the tranche bands in mental-model-1.md). Each band is a real
+ * flex child sized by its own width — no coordinate math, no per-band
+ * absolute positioning. A page just supplies N `.tranche-band` divs with
+ * `style={{flexGrow: <width>, background: <color>}}` inside one
+ * `.tranche-bar`, plus a matching set of `.tranche-tick` labels (one per
+ * boundary, positioned by percentage — the one thing that can't be
+ * flexbox-derived, since a boundary is a point, not a region) inside a
+ * `.tranche-ticks` wrapper below it.
+ */
+.tranche-bar {
+  display: flex;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  border: 1px solid var(--ifm-color-emphasis-300);
+}
+.tranche-band {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  font-size: 0.75em;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+}
+.tranche-ticks {
+  position: relative;
+  height: 1.4em;
+  margin-top: 0.35rem;
+  font-size: 0.8em;
+  color: var(--ifm-color-content-secondary);
+}
+.tranche-tick {
+  position: absolute;
+  transform: translateX(-50%);
+}
+.tranche-tick:first-child {
+  transform: translateX(0);
+}
+.tranche-tick:last-child {
+  transform: translateX(-100%);
+}

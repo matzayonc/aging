@@ -31,17 +31,36 @@ The bounds aren't chosen per-trade — a seller exits along one of these
 preset boundaries (e.g. "sell my senior 50%"), never an arbitrary custom
 slice: a 50% senior tranche, then 25%, 15%, 5%, 5% bands rising in risk.
 
-The diagram below shows that split by size — a fat safe base tapering
-into thin, risky slices at the top.
+The bar below is the actual axis, to scale, with the real boundaries
+marked — hover a band for its exact range.
 
-```mermaid
-pie title Tranche bands by size
-    "Senior (0-50%)" : 50
-    "50-75%" : 25
-    "75-90%" : 15
-    "90-95%" : 5
-    "Junior (95-100%)" : 5
-```
+<div style={{margin: '1.5rem 0'}}>
+  <div className="tranche-bar">
+    <div className="tranche-band" style={{flexGrow: 50, background: '#6b7280'}} title="Senior — 0-50 (50% of liquidity)" />
+    <div className="tranche-band" style={{flexGrow: 25, background: '#a98940'}} title="50-75 (25% of liquidity)" />
+    <div className="tranche-band" style={{flexGrow: 15, background: '#e69f00'}} title="75-90 (15% of liquidity)" />
+    <div className="tranche-band" style={{flexGrow: 5, background: '#de7f00'}} title="90-95 (5% of liquidity)" />
+    <div className="tranche-band" style={{flexGrow: 5, background: '#d55e00'}} title="Junior — 95-100 (5% of liquidity)" />
+  </div>
+  <div className="tranche-ticks">
+    <span className="tranche-tick" style={{left: '0%'}}>0</span>
+    <span className="tranche-tick" style={{left: '50%'}}>50</span>
+    <span className="tranche-tick" style={{left: '75%'}}>75</span>
+    <span className="tranche-tick" style={{left: '90%'}}>90</span>
+    <span className="tranche-tick" style={{left: '95%'}}>95</span>
+    <span className="tranche-tick" style={{left: '100%'}}>100</span>
+  </div>
+  <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '0.4rem'}}>
+    <div>
+      <div style={{fontWeight: 700}}>Senior</div>
+      <div style={{fontSize: '0.85em', color: 'var(--ifm-color-content-secondary)'}}>fat, safe, first to stay whole</div>
+    </div>
+    <div style={{textAlign: 'right'}}>
+      <div style={{fontWeight: 700}}>Junior</div>
+      <div style={{fontSize: '0.85em', color: 'var(--ifm-color-content-secondary)'}}>thin, risky, first to absorb losses</div>
+    </div>
+  </div>
+</div>
 
 ## Selling a band
 
