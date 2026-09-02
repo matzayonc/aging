@@ -49,13 +49,7 @@ const config = {
           editUrl:
             'https://github.com/matzayonc/aging/tree/master/docs-site/',
         },
-        blog: {
-          showReadingTime: true,
-          // Please change this to your repo.
-          // Remove this to remove the "edit this page" links.
-          editUrl:
-            'https://github.com/matzayonc/aging/tree/master/docs-site/',
-        },
+        blog: false,
         theme: {
           customCss: require.resolve('./src/css/custom.css'),
         },
@@ -81,7 +75,6 @@ const config = {
             position: 'left',
             label: 'Docs',
           },
-          {to: '/blog', label: 'Blog', position: 'left'},
           {
             href: 'https://github.com/matzayonc/aging',
             label: 'GitHub',
@@ -99,15 +92,23 @@ const config = {
                 label: 'Mental Model #1',
                 to: '/docs/mental-model-1',
               },
+              {
+                label: 'Invariants',
+                to: '/docs/invariants',
+              },
+              {
+                label: 'User Experience',
+                to: '/docs/user-experience',
+              },
+              {
+                label: 'Tranche Pricing Example',
+                to: '/docs/tranche-pricing-example',
+              },
             ],
           },
           {
             title: 'More',
             items: [
-              {
-                label: 'Blog',
-                to: '/blog',
-              },
               {
                 label: 'GitHub',
                 href: 'https://github.com/matzayonc/aging',
