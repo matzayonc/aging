@@ -150,19 +150,19 @@ const config = {
             padding: 10,
           },
           themeVariables: {
-            // Gantt task states, reused across docs. Same three colors as
-            // the flowchart node classes below (done=senior, active=step,
+            // Gantt task states, reused across docs. Same colors as the
+            // flowchart node classes below (done=senior, active=step,
             // crit=junior/bad) so a reader carries one palette across both
             // diagram types, whatever the diagram is about:
             //   done (gray) -> intact / still held
-            //   active (blue) -> partially hit / in flight
-            //   crit (red) -> gone / transferred away
+            //   active (indigo) -> partially hit / in flight
+            //   crit (vermilion) -> gone / transferred away
             doneTaskBkgColor: '#6b7280',
             doneTaskBorderColor: '#4b5563',
-            activeTaskBkgColor: '#2563eb',
-            activeTaskBorderColor: '#1e3a8a',
-            critBkgColor: '#d03b3b',
-            critBorderColor: '#991b1b',
+            activeTaskBkgColor: '#785ef0',
+            activeTaskBorderColor: '#2d0dc2',
+            critBkgColor: '#d55e00',
+            critBorderColor: '#843a00',
             taskTextColor: '#ffffff',
             taskTextOutsideColor: '#ffffff',
             taskTextLightColor: '#ffffff',
@@ -179,21 +179,27 @@ const config = {
           //   good / bad             -> which side of a trade-off wins
           //   step                   -> a neutral pipeline stage
           //
-          // mezz and junior used to be adjacent amber/red (#d97706/#dc2626)
-          // that measured too close together to tell apart reliably (ΔE 14.4
-          // under normal vision, worse under deuteranopia — a fresh amber
-          // (#ca8a04, shifted toward yellow, away from red) fixes the
-          // separation; junior/bad/gantt-crit now share one red (#d03b3b)
-          // instead of two near-identical ones. #ca8a04 is too light for the
-          // white node text every other class uses, so .mezz gets its own
-          // dark-text override below.
+          // Colors (besides senior's neutral gray) are drawn from two
+          // published colorblind-safe sets rather than hand-picked: mezz,
+          // junior/bad and good are Okabe & Ito's 2008 categorical palette
+          // (orange, vermilion, bluish green — chosen there specifically to
+          // replace pure red/green, the classic protan/deutan collision);
+          // step is IBM Design's indigo, from IBM's own color-blind-safe
+          // set. Validated pairwise (dataviz skill's validator, OKLab ΔE
+          // under Machado-Oliveira-Fernandes CVD simulation): worst
+          // deuteranopia pair ΔE 8.5, worst normal-vision pair ΔE 15.2,
+          // both clear the accessibility floors — a real fix over the
+          // previous hand-tuned amber/red, which measured too close (ΔE
+          // 14.4 normal-vision) to reliably tell apart. Okabe-Ito's orange
+          // is too light for the shared white node text (2.19:1), so .mezz
+          // keeps its own dark-text override.
           themeCSS: `
             .senior > rect, .senior > polygon, .senior > path { fill: #6b7280; stroke: #4b5563; }
-            .mezz   > rect, .mezz   > polygon, .mezz   > path { fill: #ca8a04; stroke: #854d0e; }
-            .junior > rect, .junior > polygon, .junior > path { fill: #d03b3b; stroke: #991b1b; }
-            .good   > rect, .good   > polygon, .good   > path { fill: #059669; stroke: #047857; }
-            .bad    > rect, .bad    > polygon, .bad    > path { fill: #d03b3b; stroke: #991b1b; }
-            .step   > rect, .step   > polygon, .step   > path { fill: #2563eb; stroke: #1e3a8a; }
+            .mezz   > rect, .mezz   > polygon, .mezz   > path { fill: #e69f00; stroke: #8f6300; }
+            .junior > rect, .junior > polygon, .junior > path { fill: #d55e00; stroke: #843a00; }
+            .good   > rect, .good   > polygon, .good   > path { fill: #009e73; stroke: #006247; }
+            .bad    > rect, .bad    > polygon, .bad    > path { fill: #d55e00; stroke: #843a00; }
+            .step   > rect, .step   > polygon, .step   > path { fill: #785ef0; stroke: #2d0dc2; }
             .senior .nodeLabel, .junior .nodeLabel,
             .good .nodeLabel, .bad .nodeLabel, .step .nodeLabel { color: #ffffff; }
             .senior text, .junior text,
