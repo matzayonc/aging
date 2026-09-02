@@ -47,17 +47,22 @@ leverage means low risk and low yield (weighted toward the senior end), high
 leverage means high risk and high yield (weighted toward the junior end).
 
 The slider is a single control over a two-sided spectrum, translated under
-the hood into a basket of band trades:
+the hood into a basket of band trades. Drag it — it's a real slider, not
+just a picture of one:
 
-```mermaid
-flowchart LR
-    L["Low leverage <br/> senior-weighted <br/> low risk/yield"]:::senior
-    H["High leverage <br/> junior-weighted <br/> high risk/yield"]:::junior
-    S((Slider))
-    L --- S
-    S --- H
-    S -->|leverage % to band basket| PM["Position market (band trades)"]:::step
-```
+<div style={{margin: '1.5rem 0', padding: '1.25rem 1.5rem', border: '1px solid var(--ifm-color-emphasis-300)', borderRadius: '12px', background: 'var(--ifm-color-emphasis-100)'}}>
+  <input type="range" min="0" max="100" defaultValue="55" className="doc-slider" aria-label="Leverage, from low (senior-weighted) to high (junior-weighted)" />
+  <div style={{display: 'flex', justifyContent: 'space-between', marginTop: '0.6rem'}}>
+    <div>
+      <div style={{fontWeight: 700}}>Low leverage</div>
+      <div style={{fontSize: '0.85em', color: 'var(--ifm-color-content-secondary)'}}>senior-weighted · low risk / low yield</div>
+    </div>
+    <div style={{textAlign: 'right'}}>
+      <div style={{fontWeight: 700}}>High leverage</div>
+      <div style={{fontSize: '0.85em', color: 'var(--ifm-color-content-secondary)'}}>junior-weighted · high risk / high yield</div>
+    </div>
+  </div>
+</div>
 
 The important design point: the **position market is the only thing the
 protocol actually stores.** The slider isn't a separate primitive with its

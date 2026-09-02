@@ -28,3 +28,44 @@
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
+
+/*
+ * Shared style for any real <input type="range"> used as a UI mockup in the
+ * docs (currently just the leverage slider in user-experience.md). Defined
+ * once here rather than per-diagram — the doc page just does
+ * `<input type="range" className="doc-slider" ... />`.
+ * Track gradient uses the same senior-gray -> junior-vermilion pair as the
+ * mermaid node classes in docusaurus.config.js (senior/junior), so the
+ * color language matches across diagram types.
+ */
+.doc-slider {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(to right, #6b7280, #d55e00);
+  outline: none;
+  cursor: pointer;
+}
+.doc-slider::-webkit-slider-thumb {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ifm-background-surface-color);
+  border: 3px solid var(--ifm-color-emphasis-700);
+}
+.doc-slider::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background: var(--ifm-background-surface-color);
+  border: 3px solid var(--ifm-color-emphasis-700);
+}
+.doc-slider::-moz-range-track {
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(to right, #6b7280, #d55e00);
+}
