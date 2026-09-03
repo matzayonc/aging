@@ -113,6 +113,10 @@ const config = {
                 label: 'Tranche Pricing Example',
                 to: '/docs/tranche-pricing-example',
               },
+              {
+                label: 'Prior Work',
+                to: '/docs/prior-work',
+              },
             ],
           },
           {

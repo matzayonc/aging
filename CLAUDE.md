@@ -56,6 +56,16 @@ maps to real code; check `src/` before claiming something is implemented.
    5-band structure) covering normal pricing, an equity wipeout, and how
    that wipeout reprices junior/senior on the secondary market short- vs.
    long-term.
+7. **`docs-site/docs/prior-work.md`** — how five on-chain protocols
+   (Strata, Royco Dawn — both live; BarnBridge, Saffron Finance,
+   Centrifuge — older or adjacent, two of which abandoned or shut down
+   tranching) implement the same senior/junior idea: track record,
+   similarities (loss order, recovery-by-redirected-yield, the
+   one-size-fits-all problem statement), and where this design goes
+   further (five fixed bands vs. everyone's two tranches, a per-band
+   order book vs. AMM-or-nothing secondary markets, continuous vs.
+   Centrifuge's epoch-batched trading, asset-agnostic vs. per-strategy
+   deployments).
 
 ## Terminology (doc term → code term)
 
