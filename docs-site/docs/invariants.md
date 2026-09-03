@@ -1,5 +1,5 @@
 ---
-sidebar_position: 4
+sidebar_position: 5
 ---
 
 # Invariants
@@ -22,11 +22,9 @@ more than it's worth.
 Depositing locks in a position sized to the value of the deposit: the position
 is a claim on that much underlying asset. Withdrawing later returns that value
 back in the underlying asset — the whole of it, ideally, or at least whatever
-part of it remains. Position value and underlying-asset value are pegged by
-this deposit/withdraw pact; nothing is created or destroyed crossing that
-boundary.
-
-The deposit/withdraw pact is a 1:1 peg in both directions, with nothing created or destroyed at the boundary.
+part of it remains. Position value and underlying-asset value are pegged 1:1
+by this deposit/withdraw pact in both directions; nothing is created or
+destroyed crossing that boundary.
 
 ```mermaid
 flowchart LR

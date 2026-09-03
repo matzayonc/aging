@@ -101,6 +101,7 @@ const config = {
                 to: '/docs/traditional-finance',
               },
               {label: 'Mental Model #1', to: '/docs/mental-model-1'},
+              {label: 'Position Market', to: '/docs/position-market'},
               {
                 label: 'Invariants',
                 to: '/docs/invariants',

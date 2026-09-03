@@ -92,6 +92,12 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* flex-basis: 0 so width comes purely from flex-grow, not from each
+     band's own text content — otherwise bands with longer labels (e.g.
+     "listed · 8%" vs "held") claim extra base width before growth is
+     applied, and segments stop landing at their intended proportional
+     boundaries. */
+  flex-basis: 0;
   color: #ffffff;
   font-size: 0.75em;
   font-weight: 700;
@@ -148,4 +154,73 @@
   bottom: 0;
   width: 2px;
   background: var(--ifm-color-emphasis-800);
+}
+
+/*
+ * Shared style for a two-axis scatter plot (currently the price x
+ * yield-share order book in position-market.md). `.orderbook-plot` is the
+ * axes box; each order is one `.orderbook-point` positioned by `left`/`top`
+ * percentage (0-100 on both axes, no coordinate math beyond the two numbers
+ * already in the doc's own table) plus a matching `.orderbook-label` for its
+ * letter. `.orderbook-xticks`/`.orderbook-yticks` are the tick-label strips
+ * below and to the left of the box, styled like `.tranche-ticks` but on
+ * both axes instead of one.
+ */
+.orderbook-plot {
+  position: relative;
+  flex: 1;
+  height: 220px;
+  border-left: 2px solid var(--ifm-color-emphasis-500);
+  border-bottom: 2px solid var(--ifm-color-emphasis-500);
+  background-image: linear-gradient(
+      to right,
+      var(--ifm-color-emphasis-200) 1px,
+      transparent 1px
+    ),
+    linear-gradient(to bottom, var(--ifm-color-emphasis-200) 1px, transparent 1px);
+  background-size: 25% 25%;
+}
+.orderbook-point {
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 2px solid var(--ifm-background-surface-color);
+}
+.orderbook-label {
+  position: absolute;
+  transform: translate(9px, -18px);
+  font-size: 0.78em;
+  font-weight: 700;
+  color: var(--ifm-color-content-secondary);
+}
+.orderbook-yticks {
+  position: relative;
+  width: 2.6rem;
+  height: 220px;
+  font-size: 0.78em;
+  color: var(--ifm-color-content-secondary);
+}
+.orderbook-ytick {
+  position: absolute;
+  right: 0.5rem;
+  transform: translateY(-50%);
+}
+.orderbook-xticks {
+  position: relative;
+  height: 1.4em;
+  margin: 0.35rem 0 0 2.6rem;
+  font-size: 0.78em;
+  color: var(--ifm-color-content-secondary);
+}
+.orderbook-xtick {
+  position: absolute;
+  transform: translateX(-50%);
+}
+.orderbook-xtick:first-child {
+  transform: translateX(0);
+}
+.orderbook-xtick:last-child {
+  transform: translateX(-100%);
 }

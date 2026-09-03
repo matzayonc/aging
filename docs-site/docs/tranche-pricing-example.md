@@ -1,5 +1,5 @@
 ---
-sidebar_position: 6
+sidebar_position: 7
 ---
 
 # Tranche Pricing Example
@@ -61,11 +61,13 @@ largest for the most:
 
 ## Secondary prices today
 
-What each band costs right now, before the period closes. Because the primary
-and secondary markets are reversible and atomically arbitrageable (Mental
-Model #1), the three prices must sum to exactly the $1.00 primary price —
-otherwise assembling a full-range position via the secondary market would be
-cheaper than depositing directly, a riskless arbitrage.
+What each band costs right now, before the period closes, on that band's own
+order book ([Position Market](./position-market.md)). Nothing in the
+protocol pegs a band's price to the $1.00 primary price — each maker sets
+price and yield-share independently, band by band. This example's three
+prices happen to sum to exactly the $1.00 primary price, which keeps the
+numbers easy to follow below, but that's a choice made for this worked
+example, not something the market enforces.
 
 | Tranche | Expected @ period end | Price today | Discount |
 |---|---|---|---|

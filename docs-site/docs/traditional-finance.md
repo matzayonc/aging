@@ -377,10 +377,10 @@ capital floors.
 Three gaps are worth being explicit about, since they're central to how
 TradFi actually prices a tranche:
 
-- **No loss model.** [Mental Model #1](./mental-model-1.md)'s exposure
-  axis describes a waterfall that never runs. There's no cumulative loss
-  variable, no recovery rate, no write-down — so band ordering is a
-  convention rather than a consequence of a modeled loss event.
+- **No loss model.** [Context](./context.md)'s exposure axis describes a
+  waterfall that never runs. There's no cumulative loss variable, no
+  recovery rate, no write-down — so band ordering is a convention rather
+  than a consequence of a modeled loss event.
 - **No correlation.** Each band is priced off its own quotes
   independently. TradFi's central insight is that value moves between
   senior and junior purely as a function of default correlation $\rho$;
@@ -394,5 +394,8 @@ structured credit the boundaries are set by rating agencies to satisfy
 mandate constraints, and secondary prices are assembled after the fact
 from polls and models. [Mental Model #1](./mental-model-1.md) fixes the
 boundaries the same way — up front, by convention — but replaces the
-entire discovery apparatus with a continuous, arbitrage-pegged secondary
-order book. The bands are borrowed; the price discovery is not.
+entire discovery apparatus with a continuous, per-band
+[order book](./position-market.md): no rating agency, no polled marks,
+just makers quoting price and yield-share directly, with nothing in the
+protocol pegging that quote to the primary market's blended rate. The
+bands are borrowed; the price discovery is not.

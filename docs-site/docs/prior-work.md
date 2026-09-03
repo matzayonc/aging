@@ -1,5 +1,5 @@
 ---
-sidebar_position: 7
+sidebar_position: 8
 ---
 
 # Prior Work
@@ -84,12 +84,13 @@ appetite" — exactly the complaint [Context](./context.md) opens with.
   don't mention a secondary market at all; Centrifuge's DROP/TIN are
   permissioned ERC-20s redeemed back through the pool, not traded
   peer-to-peer. This design gives **every** band its own order book,
-  two-dimensional over price and yield-share, atomically arbitraged
-  against the primary market.
+  two-dimensional over price and yield-share and free to price away from
+  whatever the primary market implies for that slice — see
+  [Position Market](./position-market.md).
 - **Continuous, not batched.** Centrifuge's Tinlake pools clear orders
   once per **epoch** — a discrete batch auction, not continuous trading.
   This design's order books cross immediately, with no epochs or
-  batching (see [Mental Model #1](./mental-model-1.md)).
+  batching (see [Position Market](./position-market.md)).
 - **Asset-agnostic by construction.** BarnBridge was scoped to
   lending-protocol yield, Saffron (current) to Uniswap V3 LP fees,
   Centrifuge to real-world assets, Strata and Royco to one deployment per

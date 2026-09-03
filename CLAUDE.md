@@ -36,27 +36,37 @@ maps to real code; check `src/` before claiming something is implemented.
    mapping each piece onto this prototype, including the honest gaps (no
    loss model, no correlation, no dynamic waterfall). The rest of the docs
    are self-contained without it.
-3. **`docs-site/docs/mental-model-1.md`** — core trading mechanism: fixed
-   tranche bands (mirrors `BAND_FRACTIONS` in `src/tranche.rs`, 50/25/15/5/5),
-   primary market (deposit) vs. secondary market (a per-band order book,
-   atomically arbitraged against primary so secondary stays pegged to it).
-   Trading is **continuous** — orders cross immediately, no epochs/batching.
-4. **`docs-site/docs/invariants.md`** — system-level properties: position
+3. **`docs-site/docs/mental-model-1.md`** — core trading mechanism: positions
+   (`(owner, size, exposure range)`, always the full `[0,100]` range on
+   entry), fixed tranche bands (mirrors `BAND_FRACTIONS` in
+   `src/tranche.rs`, 50/25/15/5/5), and selling a band outright. Points to
+   `position-market.md` for the alternative — resting an order instead of
+   selling outright.
+4. **`docs-site/docs/position-market.md`** — the per-band order book:
+   orders are `(amount, price, yield-share)`, price and yield-share are
+   free variables the maker sets independently (no formula relating them,
+   **not** arbitrage-pegged to primary — yield can be priced apart from
+   principal), so each band's book is genuinely **two-dimensional**, not
+   just a price axis. A worked example carries a position through
+   entry/sell/list, and open questions (order expiry, thin-band
+   market-making, partial fills, splitting yield-share across orders) are
+   flagged rather than assumed.
+5. **`docs-site/docs/invariants.md`** — system-level properties: position
    value never negative; position value conserved 1:1 against the underlying
    asset (deposit/withdraw pact); tranche liquidity balanced (normal mode:
    only balanced deposits accepted; wipeout mode: a default clears one or
    more tranches, survivors keep already-earned yield but forgo *future*
    yield until a new, separate deposit rebuilds the missing tranche).
-5. **`docs-site/docs/user-experience.md`** — how different users interact:
+6. **`docs-site/docs/user-experience.md`** — how different users interact:
    primary depositors get a plain full-range deposit; institutions/market
    makers use the order book directly; retail gets a leverage slider that's
    a UX layer over the same order book, not a separate primitive.
-6. **`docs-site/docs/tranche-pricing-example.md`** — a fully worked numeric
+7. **`docs-site/docs/tranche-pricing-example.md`** — a fully worked numeric
    example (a simplified 3-way senior/junior/equity split, not the real
    5-band structure) covering normal pricing, an equity wipeout, and how
    that wipeout reprices junior/senior on the secondary market short- vs.
    long-term.
-7. **`docs-site/docs/prior-work.md`** — how five on-chain protocols
+8. **`docs-site/docs/prior-work.md`** — how five on-chain protocols
    (Strata, Royco Dawn — both live; BarnBridge, Saffron Finance,
    Centrifuge — older or adjacent, two of which abandoned or shut down
    tranching) implement the same senior/junior idea: track record,
@@ -102,3 +112,12 @@ to code, introduced in `mental-model-1.md`:
   ordering make sense) before publishing. The senior/junior/equity prices in
   `tranche-pricing-example.md` were reworked once already because the first
   draft's discount rates didn't behave.
+- Any flex-proportional bar (`.tranche-band` and alike in
+  `docs-site/src/css/custom.css`) must set `flex-basis: 0` on the segment
+  class. Without it, flex-basis defaults to `auto` and each segment's width
+  starts from its own text content before `flex-grow` distributes the rest
+  — invisible while every label is the same short word, but segments drift
+  off their intended proportions the moment labels differ in length (e.g.
+  adding a yield suffix like "listed · 8%" next to plain "held"). Caught
+  once in `.tranche-band` after `position-market.md`'s worked example added
+  per-segment yields; check for the same gap in any new bar-style class.
