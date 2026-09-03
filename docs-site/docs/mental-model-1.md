@@ -19,7 +19,7 @@ by the deposit — not a slice of it, and there's no pricing question
 here: the deposit *is* the position, 1:1 in the underlying asset. While
 unsplit, a position earns the pool's blended yield across that whole
 range. Selling only ever narrows the range — selling is the
-**secondary market**, covered below; it never moves the position
+**position market**, covered below; it never moves the position
 sideways.
 
 ## Tranche bands
@@ -75,47 +75,47 @@ didn't sell — here, the junior `[50, 100]` remainder. Nothing about the
 past is undone; this only changes who holds the band from the sale
 onward.
 
-## Secondary market: order book
+## Position market
 
 Each fixed tranche band has its **own, separate order book** — a senior
 50% order isn't fungible with a junior 5% order, so their markets don't
-mix. An order is a **principal and a price**: how much of the band, and
-what you're willing to pay for it, priced in the same token as the
-primary market (the underlying asset) — not as a yield rate. Buyers and
-sellers cross orders directly; there's no epoch, no batching, no waiting
-for a close. A crossable order fills immediately.
+mix. What's traded is a **full position**: exposure and yield together,
+same as at primary entry — never a stripped-down claim on just one of
+the two.
 
-Because both the primary and secondary markets are **reversible**
-(deposit ↔ withdraw, buy ↔ sell) and both are always available
-atomically, the two are always tradeable against each other. That
-keeps the secondary market **pegged to the primary**: if a band's
-order-book price drifted from what the primary market implies for that
-slice, an arbitrageur could deposit (or withdraw) on the primary side
-and trade the difference away on the secondary side for a profit. The
-peg is enforced by arbitrage, not by protocol fiat.
+An order is three numbers: **amount, price, and yield-share**.
 
-The diagram below traces that arbitrage loop for a single band.
+| Field | Meaning |
+|---|---|
+| Amount | How much exposure the order covers, in that band. |
+| Price | What the buyer pays for it, in the underlying asset. |
+| Yield-share | The percentage of the underlying asset's actual yield that goes with this amount, going forward. |
 
-```mermaid
-flowchart LR
-    Primary["Primary market<br/>(deposit / withdraw)"]:::step
-    Book["Band order book<br/>(buy / sell)"]:::step
-    Arb{{Arbitrageur}}
-    Peg(["Peg maintained"]):::good
+Yield-share is a claim on real yield the underlying produces, not a
+rate the maker promises independently of it — buying an order can only
+ever entitle you to a *share of* what the asset actually earns, never a
+fixed number decoupled from it.
 
-    Book -- "price drifts from primary" --> Arb
-    Arb -- "deposit or withdraw" --> Primary
-    Arb -- "trade the difference away" --> Book
-    Primary -- "implied band value" --> Arb
-    Arb --> Peg
-```
+The maker sets price and yield-share freely per order; nothing in the
+protocol relates the three fields to each other. There's no pricing
+algorithm and no formula — the market, not the system, decides what
+yield-share is worth at what price. **Anyone** can place an order, not
+just the depositor who originally filled that band: a buyer who fills
+an order can immediately turn around and list what they bought.
+
+Because yield-share is now a free variable per order, order-book price
+is no longer pinned to what the primary market implies for that slice
+— the arbitrage argument that kept the old principal-only order book
+pegged to primary no longer applies once yield can be priced
+independently of principal. The primary market (deposit at the pool's
+blended rate) still exists unchanged alongside this, but it's no
+longer a floor or an anchor for what an order can ask.
 
 Order books this way are inherently **discrete** — one per fixed band,
-about five of them today. A future version could
-generalize this into a single **continuous market**, two-dimensional
-over risk and yield, tracing out a full risk/reward curve instead of
-five discrete points on it. That's a later step; for now, discrete
-bands with discrete order books is the design.
+about five of them today — but each one is now itself two-dimensional,
+over price and yield-share. Collapsing the five discrete bands into a
+single continuous market over risk remains a further, deferred step;
+for now, bands stay fixed and each keeps its own order book.
 
 ## Worked example
 
@@ -165,10 +165,16 @@ assumed:
 
 - Do resting orders expire, or stay open indefinitely until filled or
   cancelled?
-- Who performs the primary/secondary arbitrage that keeps the peg —
-  is it permissionless (anyone, MEV-style), or a protocol-level actor?
 - What backs market-making on a thin or newly-opened band's order book
-  well enough to keep its price reasonable?
+  well enough to keep its price reasonable, now that there's no
+  primary-market peg to anchor it?
 - Can a position be sold down across multiple separate fills (partial
   sales layered over time), or is a band's exit an all-or-nothing event
   per position?
+- Can a single position be split across multiple orders with different
+  yield-shares — e.g. sell 30% of the yield-share on one order, keep
+  the rest for another — or does every order carry 100% of the
+  yield-share tied to its amount?
+- If yield-share is splittable per order, what stops a maker's
+  outstanding orders from collectively promising more yield-share than
+  the underlying position actually produces?
